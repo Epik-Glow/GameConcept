@@ -20,7 +20,6 @@ public class ProjectileEngine {
         while(index < projectileArray.length) {
             if(projectileArray[index] instanceof Projectile) {
                 Projectile projectile = (Projectile) projectileArray[index];
-                System.out.println(projectile.getX() + ", " + projectile.getY());
                 
                 if(projectile.getX() < gameconcept.width || projectile.getX() > 0 || projectile.getY() < gameconcept.height || projectile.getY() > 0) {
                     projectile.setX(projectile.getX() + ((delta * projectile.getDX()) / 1000));
