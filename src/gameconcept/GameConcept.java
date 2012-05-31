@@ -15,13 +15,13 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 public class GameConcept {
-    private static int width = 1024;
-    private static int height = 576;
+    public static int width = 1024;
+    public static int height = 576;
     private static int fps = 60;
     private int delta = 0;
     private long lastFrame;
     private GameState state = GameState.INITIALIZATION;
-    private ProjectileEngine projectileEngine = new ProjectileEngine();
+    private ProjectileEngine projectileEngine = new ProjectileEngine(this);
     private boolean isRunning = true;
     private float translate_x = 0.0f;
     private float translate_y = 0.0f;
