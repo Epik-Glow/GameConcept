@@ -90,7 +90,7 @@ public class GameConcept {
         lastFrame = getTime();
     }
     
-    private void loadTexture(String texName) throws FileNotFoundException, IOException {
+    public void loadTexture(String texName) throws FileNotFoundException, IOException {
         texture = TextureLoader.getTexture("PNG", this.getClass().getResourceAsStream(texName + ".png"));
     }
     
@@ -124,6 +124,14 @@ public class GameConcept {
         GL11.glEnd();
         
         GL11.glColor3f(1.0f, 1.0f, 1.0f);
+        
+        try {
+            loadTexture("bullet");
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(GameConcept.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(GameConcept.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
         GL11.glBegin(GL11.GL_QUADS);

@@ -33,7 +33,7 @@ public class Player extends Entity {
     
     public void shoot() {
         Projectile projectile = new Projectile(worldx, worldy, ProjectileType.BULLET);
-        projectile.setDX(200);
+        projectile.setDX(1000);
         projectile.setDY(0);
         
         engine.add(projectile);
