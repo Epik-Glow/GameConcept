@@ -1,10 +1,11 @@
 package gameconcept;
 
 public class Projectile {
-    private int x;
-    private int y;
-    private int dx;
-    private int dy;
+    private double x;
+    private double y;
+    private int velocity;
+    private double angle;
+    private double slope;
     private ProjectileType type;
     
     public Projectile(int x, int y, ProjectileType type) {
@@ -13,37 +14,43 @@ public class Projectile {
         this.type = type;
     }
     
-    public int getX() {
+    public double getX() {
         return x;
     }
     
-    public int getY() {
+    public double getY() {
         return y;
     }
     
-    public int getDX() {
-        return dx;
+    public double getAngle() {
+        return angle;
     }
     
-    public int getDY() {
-        return dy;
+    public double getSlope() {
+        return slope;
     }
     
-    public void setX(int x) {
+    public int getVelocity() {
+        return velocity;
+    }
+    
+    public void setX(double x) {
         this.x = x;
     }
     
-    public void setY(int y) {
+    public void setY(double y) {
         this.y = y;
     }
     
-    public void setDX(int dx) {
-        this.dx = dx;
+    public void setAngle(double angle) {
+        this.angle = angle;
     }
     
-    public void setDY(int dy) {
-        this.dy = dy;
+    public void setSlope(double slope) {
+        this.slope = slope;
     }
     
-    
+    public void setVelocity(int velocity) {
+        this.velocity = velocity;
+    }
 }

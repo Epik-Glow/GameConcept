@@ -10,26 +10,24 @@ import org.lwjgl.opengl.GL11;
 public class ProjectileEngine {
     private int numProjectiles;
     private ArrayList projectiles = new ArrayList();
-    private GameConcept gameconcept;
+    private GameConcept gameConcept;
     
     public ProjectileEngine(GameConcept instance) {
         numProjectiles = 0;
-        gameconcept = instance;
+        gameConcept = instance;
     }
     
     public void update(int delta) {
         int index = 0;
         Object projectileArray[] = projectiles.toArray();
-        System.out.println("Size: " + projectiles.size());
-        System.out.println("Length: " + projectileArray.length);
         
         while(index < projectileArray.length) {
             if(projectileArray[index] instanceof Projectile) {
                 Projectile projectile = (Projectile) projectileArray[index];
                 
                 if((projectile.getX() < GameConcept.width && projectile.getX() > 0) && (projectile.getY() < GameConcept.height && projectile.getY() > 0)) {
-                    projectile.setX(projectile.getX() + ((delta * projectile.getDX()) / 1000));
-                    projectile.setY(projectile.getY() + ((delta * projectile.getDY()) / 1000));
+                    projectile.setX(projectile.getX() + (delta * (projectile.getVelocity() * Math.cos(projectile.getAngle())) / 1000));
+                    projectile.setY(projectile.getY() + (delta * (projectile.getVelocity() * Math.sin(projectile.getAngle())) / 1000));
                     projectiles.set(index, projectile);
                     
                     projectileArray = projectiles.toArray();
@@ -37,7 +35,6 @@ public class ProjectileEngine {
                 }
                 else {
                     projectile = null;
-                    System.out.println("removed");
                     remove(index);
                     projectiles.trimToSize();
                     projectileArray = projectiles.toArray();
@@ -54,23 +51,24 @@ public class ProjectileEngine {
             if(projectileArray[index] instanceof Projectile) {
                 Projectile projectile = (Projectile) projectileArray[index];
                 try {
-                    gameconcept.loadTexture("bullet");
+                    gameConcept.loadTexture("bullet");
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(ProjectileEngine.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
                     Logger.getLogger(ProjectileEngine.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
-                GL11.glBindTexture(GL11.GL_TEXTURE_2D, gameconcept.texture.getTextureID());
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, gameConcept.texture.getTextureID());
+                
                 GL11.glBegin(GL11.GL_QUADS);
                     GL11.glTexCoord2f(0, 1);
-                    GL11.glVertex2f(projectile.getX() - 6, projectile.getY() - 4);
+                    GL11.glVertex2f((float) projectile.getX() - 6, (float) projectile.getY() - 4);
                     GL11.glTexCoord2f(0, 0);
-                    GL11.glVertex2f(projectile.getX() - 6, projectile.getY() + 4);
+                    GL11.glVertex2f((float) projectile.getX() - 6, (float) projectile.getY() + 4);
                     GL11.glTexCoord2f(1, 0);
-                    GL11.glVertex2f(projectile.getX() + 6, projectile.getY() + 4);
+                    GL11.glVertex2f((float) projectile.getX() + 6, (float) projectile.getY() + 4);
                     GL11.glTexCoord2f(1, 1);
-                    GL11.glVertex2f(projectile.getX() + 6, projectile.getY() - 4);
+                    GL11.glVertex2f((float) projectile.getX() + 6, (float) projectile.getY() - 4);
                 GL11.glEnd();
             }
             
@@ -85,5 +83,9 @@ public class ProjectileEngine {
     
     public void remove(int index) {
         projectiles.remove(index);
+    }
+    
+    public void destroy() {
+        projectiles = null;
     }
 }
