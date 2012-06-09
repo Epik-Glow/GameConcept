@@ -8,6 +8,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
@@ -15,27 +16,32 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 public class GameConcept {
-    public static int width = 1024;
+    public static int width = 1025;
     public static int height = 576;
-    private static int fps = 60;
+    private static int fps = 120;
     private int delta = 0;
     private long lastFrame;
     private GameState state = GameState.INITIALIZATION;
-    private ProjectileEngine projectileEngine = new ProjectileEngine(this);
+    private ProjectileEngine projectileEngine;
+    private SoundEngine soundEngine;
     private boolean isRunning = true;
     private float translate_x = 0.0f;
     private float translate_y = 0.0f;
-    private Player player = new Player(width / 2, height / 2, projectileEngine);
+    private Player player;
     Texture texture = null;
     private boolean leftButtonDown;
-    
     
     public GameConcept() {        
         while(isRunning) {
             if(state == GameState.INITIALIZATION) {
                 setUpDisplay();
                 setUpOpenGL();
+                setUpOpenAL();
                 setUpTimer();
+                
+                projectileEngine = new ProjectileEngine(this);
+                soundEngine = new SoundEngine(this);
+                player = new Player(width / 2, height / 2, projectileEngine, soundEngine);
                 leftButtonDown = Mouse.isButtonDown(0);
                 
                 try {
@@ -60,7 +66,10 @@ public class GameConcept {
                 isRunning = false;
             }
         }
+        projectileEngine.destroy();
+        soundEngine.destroy();
         Display.destroy();
+        AL.destroy();
     }
     
     private void setUpDisplay() {
@@ -80,6 +89,15 @@ public class GameConcept {
         GL11.glOrtho(0, width, 0, height, -1, 1);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
+    }
+    
+    private void setUpOpenAL() {
+        try {
+            AL.create();
+        } catch (LWJGLException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
     }
     
     public long getTime() {
@@ -106,6 +124,10 @@ public class GameConcept {
         projectileEngine.update(delta);
     }
     
+    public Player getPlayer() {
+        return player;
+    }
+    
     public void render() {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
         
@@ -126,7 +148,7 @@ public class GameConcept {
         GL11.glColor3f(1.0f, 1.0f, 1.0f);
         
         try {
-            loadTexture("bullet");
+            loadTexture("sample");
         } catch (FileNotFoundException ex) {
             Logger.getLogger(GameConcept.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -147,6 +169,20 @@ public class GameConcept {
             // Bottom-right
             GL11.glTexCoord2f(1, 1);
             GL11.glVertex2f(player.getWorldX() + 50, player.getWorldY() - 50);
+        GL11.glEnd();
+        
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+        GL11.glColor3f(1.0f, 1.0f, 1.0f);
+        
+        GL11.glBegin(GL11.GL_QUADS);
+            // Bottom-left
+            GL11.glVertex2f(100, 200);
+            // Top-left
+            GL11.glVertex2f(150, 250);
+            // Top-right
+            GL11.glVertex2f(200, 200);
+            // Bottom-right
+            GL11.glVertex2f(150, 150);
         GL11.glEnd();
         
         projectileEngine.render();
