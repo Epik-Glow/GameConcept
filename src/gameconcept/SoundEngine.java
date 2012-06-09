@@ -1,9 +1,6 @@
 package gameconcept;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.openal.AL;
+import java.io.BufferedInputStream;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.util.WaveData;
 
@@ -17,8 +14,10 @@ public class SoundEngine {
     }
     
     public void loadSound(String wavName) {
-        WaveData data = WaveData.create(this.getClass().getResourceAsStream(wavName + ".wav"));
+        WaveData data = WaveData.create(new BufferedInputStream(this.getClass().getResourceAsStream(wavName + ".wav")));
         AL10.alBufferData(buffer, data.format, data.data, data.samplerate);
+        data.dispose();
+        
         AL10.alSourcei(source, AL10.AL_BUFFER, buffer);
         AL10.alSourcef(source, AL10.AL_GAIN, 0.2f);
     }

@@ -13,6 +13,7 @@ public class Player extends Entity {
         super(x, y);
         this.projectileEngine = projectileEngine;
         this.soundEngine = soundEngine;
+        soundEngine.loadSound("shot");
     }
     
     public void update(int delta) {
@@ -42,7 +43,6 @@ public class Player extends Entity {
         projectile.setAngle(Math.atan2(Mouse.getY() - worldy, Mouse.getX() - worldx));
         projectile.setSlope(((double) Mouse.getY() - worldy) / ((double) Mouse.getX() - worldx));
         
-        soundEngine.loadSound("shot");
         soundEngine.playSound();
         projectileEngine.add(projectile);
     }
